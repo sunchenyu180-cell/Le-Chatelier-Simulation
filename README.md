@@ -83,6 +83,8 @@ const ConcentrationSim = () => {
   const g = Math.round(230 - t * 230);
   const b = Math.round(100 - t * 100);
   const fluidColor = `rgb(${r}, ${g}, ${b})`;
+  
+  const fluidStyle = { height: '75%', backgroundColor: fluidColor };
 
   const handleAddA = () => { setAtot(p => Math.min(2, p + 0.3)); setActionMsg("Added Fe³⁺. System shifts RIGHT to consume it."); };
   const handleSubA = () => { setAtot(p => Math.max(0.1, p - 0.3)); setActionMsg("Removed Fe³⁺. System shifts LEFT to replace it."); };
@@ -97,7 +99,7 @@ const ConcentrationSim = () => {
         <div className="absolute top-0 w-36 h-full border-4 border-slate-300 rounded-b-[2.5rem] bg-white/50 backdrop-blur overflow-hidden flex items-end shadow-inner z-10">
           <div 
             className="w-full transition-colors duration-75"
-            style={{ height: '75%', backgroundColor: fluidColor }}
+            style={fluidStyle}
           />
         </div>
         {/* Beaker Lip */}
@@ -174,6 +176,10 @@ const PressureSim = () => {
   const g = Math.round(250 - t * (250 - 69));
   const b = Math.round(250 - t * (250 - 19));
   const gasColor = `rgb(${r}, ${g}, ${b})`;
+  
+  const gasContainerStyle = { height: `${(V / 10) * 100}%`, backgroundColor: gasColor };
+  const particlesStyle = { backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)', backgroundSize: `${V*4}px ${V*4}px` };
+  const pistonStyle = { bottom: `calc(${(V / 10) * 14}rem - 8px)` };
 
   const handleVolumeChange = (e) => {
     const newV = parseFloat(e.target.value);
@@ -191,16 +197,16 @@ const PressureSim = () => {
           {/* Gas Gas */}
           <div 
             className="w-full transition-colors duration-75 relative"
-            style={{ height: `${(V / 10) * 100}%`, backgroundColor: gasColor }}
+            style={gasContainerStyle}
           >
              {/* Particles representation (abstract) */}
-             <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)', backgroundSize: `${V*4}px ${V*4}px`}}></div>
+             <div className="absolute inset-0 opacity-20" style={particlesStyle}></div>
           </div>
         </div>
         {/* Piston */}
         <div 
           className="absolute w-36 h-4 bg-slate-600 rounded-sm z-20 cursor-ns-resize shadow-md transition-all duration-75"
-          style={{ bottom: `calc(${(V / 10) * 14}rem - 8px)` }}
+          style={pistonStyle}
         >
           {/* Piston Handle */}
           <div className="absolute bottom-full left-1/2 -translate-x-1/2 w-4 h-32 bg-slate-300"></div>
@@ -283,6 +289,9 @@ const TemperatureSim = () => {
   // Bath color based on temperature
   const bathRatio = Tcelsius / 100;
   const bathColor = `rgba(${Math.round(bathRatio * 255)}, 100, ${Math.round((1 - bathRatio) * 255)}, 0.3)`;
+  
+  const bathBgStyle = { backgroundColor: bathColor };
+  const gasBgStyle = { backgroundColor: gasColor };
 
   const handleTempChange = (e) => {
     const newT = parseInt(e.target.value);
@@ -299,7 +308,7 @@ const TemperatureSim = () => {
         {/* Thermal Bath */}
         <div 
           className="absolute bottom-0 w-full h-32 rounded-lg border-2 border-slate-300 transition-colors duration-300 z-0"
-          style={{ backgroundColor: bathColor }}
+          style={bathBgStyle}
         >
            {/* Heater coils/Ice cubes abstract */}
            <div className="absolute inset-0 flex justify-center gap-2 pt-2 opacity-50">
@@ -310,11 +319,11 @@ const TemperatureSim = () => {
         
         {/* Sealed Flask */}
         <div className="absolute bottom-4 w-24 h-24 rounded-full border-4 border-white shadow-lg bg-white/40 backdrop-blur-sm z-10 overflow-hidden flex items-center justify-center">
-          <div className="absolute inset-0 transition-colors duration-300" style={{ backgroundColor: gasColor }} />
+          <div className="absolute inset-0 transition-colors duration-300" style={gasBgStyle} />
         </div>
         {/* Flask Neck */}
         <div className="absolute bottom-[6.5rem] w-6 h-12 border-x-4 border-white bg-white/40 backdrop-blur-sm z-10 overflow-hidden">
-          <div className="absolute inset-0 transition-colors duration-300" style={{ backgroundColor: gasColor }} />
+          <div className="absolute inset-0 transition-colors duration-300" style={gasBgStyle} />
           {/* Stopper */}
           <div className="absolute top-0 w-full h-3 bg-slate-800 rounded-sm"></div>
         </div>
